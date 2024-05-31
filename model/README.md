@@ -22,6 +22,14 @@ If you compare each function's output on the example care instructions in model/
 BUT ! Doesn't send sensitive medical information to a third-party.
 This new script model/jargon_identifier/ner.py uses similar file access as retrieval.py by locating the absolute path to the root from the current working directory, then finding the relevant file.
 
+# model/vector_db/vector_db.py
+WIP: To retrieve and store data (in our case, definitions), one can use these (recommended but not mandatory) methods:
+
+[Chroma DB](https://www.trychroma.com/) - Chroma is a free Vector DB that handles storing and retriving vectors. Additionally, it allows for similarity search based on an arbitrary search string. 
+Some embedding model - Chroma will save and retrieve embeddings but cannot create it on its own. Therefore, another vectorizing library is required. A small sample can be found in the [LangChain docs](https://python.langchain.com/v0.1/docs/integrations/text_embedding/)
+
+Sample code is in the Pull Requests.
+
 # Model (this is the NLP stuff)
 The model is where data becomes useful information. This would normally talk to a database too but we're probably not doing one? Unclear so far. This is where we're gonna put all the NLP stuff like language models!
 Try to keep it organized and use the [DRY principle](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) to keep things readable.
