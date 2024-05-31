@@ -206,6 +206,33 @@ class TextSimplifier:
             self.simple_dict = out_dict
             return out_dict
 
+    def simplify_medical_definitions(self, sentences: dict):
+        """
+        Takes a dictionary of words and their definitions, and provides simplified sentences
+
+        Arguments:
+        sentences
+            A dictionary with words as keys and their definitions as values
+
+        Returns:
+        out_dict
+            A dictionary with words as keys, and values as a nested dictionary with database names and their definitions
+        """
+        out_dict = {}
+
+        # go through all definitions that need simplification, create new dictionary with simplified definitions
+        for term in sentences.keys():
+            for database in sentences[term].keys():
+                definition = sentences[term][database]
+
+                simplified_definition = self.simplify_sentence(definition)
+                simplified_definition = self.clean_definition(simplified_definition)
+
+                out_dict[term] = {}
+                out_dict[term][database] = simplified_definition
+
+        return out_dict
+
 
     def evaluate(self, gold_std: dict, write_output: bool, output_file: str = None):
         """
