@@ -180,15 +180,15 @@ def identify_jargon(text: str) -> list[dict]:
     # run through text in slices, adding recognized jargon to list
     terms = []
 
-    # TODO: Fix loop below so that it works on texts < 5 tokens long!
-    # all of our terms are <=5 tokens long
-    for idx in range(token_ct - 4):
+    for idx in range(token_ct):
         # look at phrases of length 1 - 5:
         for offset in range(1, 6):
-            potential_term = " ".join(tokens[idx:idx+offset])
-            # if the phrase is in our list, add it as "identified jargon":
-            if potential_term in recognized_term_list:
-                terms.append(potential_term)
+            # ensure offset doesn't extend past end of str
+            if (idx + offset) <= token_ct:
+                potential_term = " ".join(tokens[idx:idx+offset])
+                # if the phrase is in our list, add it as "identified jargon":
+                if potential_term in recognized_term_list:
+                    terms.append(potential_term)
 
     return get_term_indices(terms, text)
 
@@ -202,7 +202,7 @@ def identify_jargon(text: str) -> list[dict]:
 #     text = f.read()
 
 # # Run & print each kind of jardon ID'er:
-# print(identify_jargon("she has copd"))
+# print(identify_jargon("she has asthma"))  # check that shorter sentences process.
 # print(identify_jargon(sent))
 # print(identify_jargon(text))
 
