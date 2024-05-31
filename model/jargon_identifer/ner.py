@@ -1,10 +1,11 @@
 # Recommended to test on Python 3.7+, openai 0.25+. Use `pip3 install promptify` before calling this script.
-# A short script for recongizing name entities using the promptify pipeline and LLM.
+# A short script for recognizing name entities using the promptify pipeline and LLM.
 
 import os
 from os.path import basename, dirname, join
 import json
 import regex as re
+from nltk.tokenize import word_tokenize
 from promptify import Prompter, OpenAI, Pipeline
 
 
@@ -99,13 +100,16 @@ def get_term_indices(terms: list[str], text: str) -> list[dict]:
     return term_positions
 
 
-def identify_jargon(text: str) -> list[dict]:
+def identify_jargon_llm(text: str) -> list[dict]:
     """
-    Identifies medical jargon in a given text.
+    Identifies medical jargon in a given text using Promptify.
 
     Given a text of any length (one or multiple sentences), this function
     identifies the *locations* of potential medical jargon. Each term will
     need to be sliced from the original text using the returned indices.
+
+    This function is similar to identify_jargon(), except that it requires
+    an OpenAI API key and sends text data to GPT-3.5.
 
     Arguments:
         text (str): The text containing potential medical jargon.
@@ -139,4 +143,66 @@ def identify_jargon(text: str) -> list[dict]:
     # find term indices in original text:
     return get_term_indices(terms, text)
 
-print(identify_jargon("Test results returned positive for chronic emphesyma and an embolism."))
+
+def identify_jargon(text: str) -> list[dict]:
+    """
+    Identifies medical jargon in a given text using text processing techniques.
+
+    Given a text of any length (one or multiple sentences), this function
+    identifies the *locations* of potential medical jargon. Each term will
+    need to be sliced from the original text using the returned indices.
+
+    This is similar to identify_jargon_llm(), except that it purely uses text
+    processing and checks for exact phrase matches in our list of terms. It may
+    take longer, given longer texts, but it is (1) less likely to error out (at
+    least not for reasons outside of our control) and (2) not sending private
+    data to an LLM host.
+
+    Arguments:
+        text (str): The text containing potential medical jargon.
+    
+    Returns:
+        list[dict{}, dict{}, ...]
+        Each dictionary represents an identified jargon phrase and contains 
+        the following keys:
+            - char_position_in_text (int): The index of the jargon's first 
+                character in the full text
+            - term_length (int): The full length of the jargon phrase (offset)
+    """
+    # load our term dictionary
+    term_to_cui_dict = load_data("term_to_cui_final.json")
+    recognized_term_list = term_to_cui_dict.keys()
+
+    # tokenize + lowercase (Ex: "Pulmonary embolism's a tough condition...")
+    tokens = [t.lower() for t in word_tokenize(text)]
+    token_ct = len(tokens)
+
+    # run through text in slices, adding recognized jargon to list
+    terms = []
+
+    # all of our terms are <=5 tokens long
+    for idx in range(token_ct - 4):
+        # look at phrases of length 1 - 5:
+        for offset in range(1, 6):
+            potential_term = " ".join(tokens[idx:idx+offset])
+            # if the phrase is in our list, add it as "identified jargon":
+            if potential_term in recognized_term_list:
+                terms.append(potential_term)
+
+    return get_term_indices(terms, text)
+
+
+# # --------------------------------------------------------
+# # Below are a few texts for DEBUGGING this file:
+# # Example sentence:
+# sent = "Test results returned positive for chronic emphesyma and an embolism. Testing soon for asthma and COPD."
+# # Example doc:
+# with open("example_doc.txt", 'r') as f:
+#     text = f.read()
+
+# # Run & print each kind of jardon ID'er:
+# print(identify_jargon(sent))
+# print(identify_jargon(text))
+
+# print(identify_jargon_llm(sent))
+# print(identify_jargon_llm(text))
