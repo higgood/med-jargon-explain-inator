@@ -171,7 +171,7 @@ def identify_jargon(text: str) -> list[dict]:
     """
     # load our term dictionary
     term_to_cui_dict = load_data("term_to_cui_final.json")
-    recognized_term_list = term_to_cui_dict.keys()
+    recognized_term_list = [t.lower() for t in list(term_to_cui_dict.keys())]
 
     # tokenize + lowercase (Ex: "Pulmonary embolism's a tough condition...")
     tokens = [t.lower() for t in word_tokenize(text)]
@@ -180,6 +180,7 @@ def identify_jargon(text: str) -> list[dict]:
     # run through text in slices, adding recognized jargon to list
     terms = []
 
+    # TODO: Fix loop below so that it works on texts < 5 tokens long!
     # all of our terms are <=5 tokens long
     for idx in range(token_ct - 4):
         # look at phrases of length 1 - 5:
@@ -201,6 +202,7 @@ def identify_jargon(text: str) -> list[dict]:
 #     text = f.read()
 
 # # Run & print each kind of jardon ID'er:
+# print(identify_jargon("she has copd"))
 # print(identify_jargon(sent))
 # print(identify_jargon(text))
 
