@@ -1,5 +1,5 @@
 # Recommended to test on Python 3.7+, openai 0.25+. Use `pip3 install promptify` before calling this script.
-# A short script for recognizing name entities using the promptify pipeline and LLM.
+# Functions for recognizing medical jargon using the promptify LLM pipeline or using pure string processing.
 
 import os
 from os.path import basename, dirname, join
@@ -128,12 +128,10 @@ def identify_jargon_llm(text: str) -> list[dict]:
     # Input sentence for recognition - runs quickly w/ triple quotes (?)
     sentence =  f"""{text}"""
 
-    # set up promptify model:
+    # set up & call promptify model:
     model = OpenAI(api_key)
-    prompter = Prompter('ner.jinja')
+    prompter = Prompter('ner.jinja')    # only works with OpenAI models...
     pipe = Pipeline(prompter , model)
-
-    # call promptify:
     result = pipe.fit(sentence, domain="medical", labels=None)
 
     # find jargon in model output:
@@ -173,11 +171,11 @@ def identify_jargon(text: str) -> list[dict]:
     term_to_cui_dict = load_data("term_to_cui_final.json")
     recognized_term_list = [t.lower() for t in list(term_to_cui_dict.keys())]
 
-    # tokenize + lowercase (Ex: "Pulmonary embolism's a tough condition...")
+    # tokenize + lowercase
     tokens = [t.lower() for t in word_tokenize(text)]
     token_ct = len(tokens)
 
-    # run through text in slices, adding recognized jargon to list
+    # run through text in slices, add recognized jargon to list
     terms = []
 
     for idx in range(token_ct):
@@ -190,7 +188,7 @@ def identify_jargon(text: str) -> list[dict]:
                 if potential_term in recognized_term_list:
                     terms.append(potential_term)
 
-    return get_term_indices(terms, text)
+    return get_term_indices(set(terms), text)
 
 
 # # --------------------------------------------------------
@@ -202,7 +200,7 @@ def identify_jargon(text: str) -> list[dict]:
 #     text = f.read()
 
 # # Run & print each kind of jardon ID'er:
-# print(identify_jargon("she has asthma"))  # check that shorter sentences process.
+# print(identify_jargon("she has asthma."))  # check that shorter sentences process.
 # print(identify_jargon(sent))
 # print(identify_jargon(text))
 
