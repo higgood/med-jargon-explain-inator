@@ -1,3 +1,25 @@
+# Data documentation
+This file describes the various data artifacts we created in this project in Sp'24.
+
+## Data artifacts
+
+### Structured data
+* cui_to_def.json: A recent, processed snapshot of UMLS focusing on medical terms. CUI is an machine-readable identifier for UMLS terms.
+* semantic_groups.txt: the categories used to filter out non-medical terms (as part of the processing for cui_to_def.json).
+* cui_to_def_final.json: This file is a derivative of process_json.py (described below).
+* cui_to_def_simplified.json: This is similar to cui_to_def_final.json but it replaces complex definitions with their simplified versions. We define complex definitions as ones with a reading difficulty score >= 45. Simplified definitions are produced by T5, using `model/simplifier_pipeline.py`.
+* jargon.txt: This is the non-UMLS terms (with definitions), which are combined with UMLS data before merging into cui_to_def_final.json. More details about how they were curated can be found herein.
+* term_to_cui.json: This file maps (potentially ambiguous) term strings from UMLS to one or more CUIs. This is already filtered according to semantic_groups.txt.
+* term_to_cui_final.json: This file is a derivative of process_json.py (described below).
+
+### Unstructured data
+* aligned_data.csv: A parallel general-domain corpus for English Wikipedia vs. Simple English Wikipedia. It was useful for training/evaluating models for simplifying medical definitions.
+
+### Scripts
+process_json.py: A script that combines UMLS and non-UMLS medical terms into the same format, in order to increase coverage and customize the medical ontology used as a data backbone for this system.
+
+## How we curated non-UMLS data 
+
 Processing Steps Documentation
 
 Abbreviations:
