@@ -16,6 +16,12 @@ TBD, but you'll need at least Python 3.6. Install by using `pip <package name>`.
 - `nltk`
 - `fastapi`
 - `"uvicorn[standard]"`
+- `promptify`
+
+You will also need to run the command below with the correct python environment active. It downloads the dependency for NLTK's tokenizers:
+```shell
+python -m nltk.downloader punkt
+```
 
 ## Structure
 The explain-inator is built using a traditional [Model-View-Controller](https://www.geeksforgeeks.org/mvc-framework-introduction/) framework. See the READMEs inside each folder to see more details about how this all works together.
