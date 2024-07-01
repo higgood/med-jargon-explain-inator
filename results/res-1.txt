@@ -1,0 +1,21 @@
+# Example sentence: 
+# "The patient is a 93-year-old female with a medical history of chronic right hip pain, osteoporosis, 
+# hypertension, depression, and chronic atrial fibrillation admitted for 
+# evaluation and management of severe nausea 
+# and vomiting and urinary tract infection"
+
+Age: 93-year-old
+
+Gender: female
+
+Medical Conditions:
+chronic right hip pain
+osteoporosis
+hypertension
+depression
+chronic atrial fibrillation
+severe nausea and vomiting
+urinary tract infection
+
+Purpose of Admission:
+evaluation and management

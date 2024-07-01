@@ -1,0 +1,10 @@
+# Source texts (first paragraph from the article Formate assay in body fluids: Application in methanol poisoning):
+(* The availability of a sensitive and specific assay for formic acid
+remains one of the limiting factors in our understanding of its role in the
+toxicity of methanol in man and lower animals (1). A great deal of information has been generated on the oxidation of methanol in lower animals and in primates (2-5) and, recently, the disposition of formaldehyde in animals has been studied (6). However, little is known
+concerning the disposition of formate in vivo in animals despite the relative wealth of information available on the metabolism of this substance
+in vitro (7,8). This is due partly to the lack of a suitable assay for formate
+in body fluids and tissues.  *)
+
+Chemical: Formic acid, methanol, formaldehyde, and formate
+Species: Man, animals, and primates
